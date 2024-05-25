@@ -1,2 +1,6 @@
-package com.intellexi.racequery.domain.enums;public class UserRole {
+package com.intellexi.racequery.domain.enums;
+
+public enum UserRole {
+    ADMINISTRATOR,
+    APPLICANT;
 }

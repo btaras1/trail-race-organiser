@@ -1,10 +1,14 @@
 package com.intellexi.racequery.rest.dto.request;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
-@Getter
-public class LoginRequestDto {
-    private String email;
+import static lombok.AccessLevel.PRIVATE;
 
-    private String password;
+@Data
+@FieldDefaults(level = PRIVATE)
+public class AuthRequestDto {
+
+    String email;
+    String password;
 }

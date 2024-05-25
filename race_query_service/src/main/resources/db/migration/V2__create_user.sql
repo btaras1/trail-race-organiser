@@ -1,10 +1,13 @@
-CREATE TABLE application (
+CREATE TYPE type_role AS ENUM ('ADMINISTRATOR', 'APPLICANT');
+
+CREATE TABLE _user (
     id UUID PRIMARY KEY NOT NULL,
-    club VARCHAR(255),
-    race_id UUID NOT NULL,
-    user_id UUID NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    dob date NOT NULL,
+    role type_role NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (race_id) REFERENCES race (id),
-    FOREIGN KEY (user_id) REFERENCES _user (id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
