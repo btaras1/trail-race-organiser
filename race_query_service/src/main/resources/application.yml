@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: 'Race query service'
+  datasource:
+    url: 'Race query service'
+    username: 'Race query service'
+    password: 'Race query service'
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+security:
+  jwt:
+    secret: 'Race query service'
+    expiration-time: 3600000
+
