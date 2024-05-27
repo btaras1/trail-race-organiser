@@ -1,11 +1,7 @@
 package com.intellexi.racequery.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +10,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "application")
 @ToString(exclude = "race")
@@ -27,7 +25,7 @@ public class Application {
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
-    @Column
+    @Column(name = "club")
     private String club;
 
     @ManyToOne
@@ -35,8 +33,10 @@ public class Application {
     private Race race;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private Instant updatedAt;
 }

@@ -1,0 +1,17 @@
+spring:
+  kafka:
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    consumer:
+      group-id: test-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+security:
+  jwt:
+    secret-key: 'racequeryservice9a4f2c8d3b7a1e6f45c8a0b3f267d8b1d4e6f3c8a9d2b5f81234567890987654'
+services:
+  query:
+    endpoint: 'http://localhost:8080/api/v1/users/{username}'
+

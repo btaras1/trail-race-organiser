@@ -1,22 +1,32 @@
 package com.intellexi.racequery.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.intellexi.racequery.domain.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
-@Getter
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "_user")
 public class User implements UserDetails {
@@ -44,7 +54,16 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user")
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @OneToMany(mappedBy = "user", fetch = EAGER)
+    @JsonIgnore
     private List<Application> applications;
 
     @Override

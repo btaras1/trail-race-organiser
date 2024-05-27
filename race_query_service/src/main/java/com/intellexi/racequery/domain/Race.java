@@ -2,6 +2,8 @@ package com.intellexi.racequery.domain;
 
 import com.intellexi.racequery.domain.enums.RaceDistance;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,7 +17,9 @@ import static jakarta.persistence.FetchType.EAGER;
 
 @Entity
 @Data
+@Builder
 @Table(name = "race")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Race {
 
@@ -34,8 +38,10 @@ public class Race {
     private List<Application> applications;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private Instant updatedAt;
 }

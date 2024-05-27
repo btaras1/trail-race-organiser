@@ -1,6 +1,7 @@
 package com.intellexi.racequery.service.auth;
 
 import com.intellexi.racequery.domain.User;
+import com.intellexi.racequery.exception.UserNotFoundException;
 import com.intellexi.racequery.repository.UserRepository;
 import com.intellexi.racequery.rest.dto.request.AuthRequestDto;
 import com.intellexi.racequery.rest.dto.response.AuthResponseDto;
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -21,7 +20,6 @@ import static lombok.AccessLevel.PRIVATE;
 public class AuthService {
 
     UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
     JwtService jwtService;
     AuthenticationManager authenticationManager;
 
@@ -34,7 +32,8 @@ public class AuthService {
         );
 
         User authenticatedUser = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() ->
+                        new UserNotFoundException(String.format("User with email %s not found.", input.getEmail())));
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
