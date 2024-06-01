@@ -4,17 +4,17 @@ spring:
   application:
     name: 'Race query service'
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:29092}
     consumer:
       auto-offset-reset: earliest
       group-id: backend
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   datasource:
-    url: jdbc:postgresql://localhost:5432/race
+    url: jdbc:postgresql://${POSTGRES_URL:localhost}:5432/${POSTGRES_DB:race}
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: password
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,4 +22,11 @@ security:
   jwt:
     secret-key: 'racequeryservice9a4f2c8d3b7a1e6f45c8a0b3f267d8b1d4e6f3c8a9d2b5f8e3a9c8b5f6v8a3d9'
     expiration-time: 36000000
+logging:
+  level:
+    org.springframework.kafka.*: OFF
+    org.springframework.kafka.listener.[KafkaMessageListenerContainer$ListenerConsumer]: OFF
+    org.apache.kafka.*: OFF
+    kafka.*: OFF
+    org.apache.zookeeper.*: OFF
 

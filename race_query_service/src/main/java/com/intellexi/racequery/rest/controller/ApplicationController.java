@@ -19,8 +19,8 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/applications")
 @RequiredArgsConstructor
+@RequestMapping("api/v1/applications")
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class ApplicationController {
 

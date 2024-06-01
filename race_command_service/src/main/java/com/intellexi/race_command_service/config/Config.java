@@ -19,11 +19,7 @@ public class Config {
 
     @Bean
     public ObjectMapper objectMapper() {
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(GrantedAuthority.class, new GrantedAuthorityDeserializer());
-
-        return new ObjectMapper()
-                .registerModule(module);
+        return new ObjectMapper();
     }
 
     @Bean

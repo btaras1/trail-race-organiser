@@ -13,4 +13,5 @@ public class AuthResponseDto {
 
     String token;
     long expiresIn;
+    boolean isAdmin;
 }

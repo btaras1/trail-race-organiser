@@ -39,7 +39,8 @@ public abstract class TestContainersInitializer {
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
 
 	@Container
-	static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.3"));
+	static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.3"))
+			.withEnv("KAFKA_CREATE_TOPICS", "races:1:3,applications:1:3");;
 
 
 	@BeforeAll

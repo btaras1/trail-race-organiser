@@ -1,11 +1,13 @@
 package com.intellexi.race_command_service.gateway;
 
-import com.intellexi.race_command_service.rest.dto.response.UserDetailsResponse;
+import com.intellexi.race_command_service.rest.dto.response.UserDetailsResponseDto;
 import lombok.experimental.FieldDefaults;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.http.HttpMethod.GET;
@@ -32,7 +36,10 @@ public class RaceQueryGateway {
     }
 
     public UserDetails authUser(String username, String authHeader) {
-        return restTemplate.exchange(buildUri(username), GET, buildEntity(authHeader), UserDetailsResponse.class).getBody();
+        UserDetailsResponseDto user = restTemplate
+                .exchange(buildUri(username), GET, buildEntity(authHeader), UserDetailsResponseDto.class)
+                .getBody();
+        return new User(user.getEmail(), user.getPassword(), constructAuthorities(user.getRole()));
     }
 
     private URI buildUri(String username) {
@@ -46,5 +53,9 @@ public class RaceQueryGateway {
         httpHeaders.add("Authorization", authHeader);
 
         return new HttpEntity<>("body", httpHeaders);
+    }
+
+    public Collection<? extends GrantedAuthority> constructAuthorities(String role) {
+        return List.of(new SimpleGrantedAuthority(role));
     }
 }

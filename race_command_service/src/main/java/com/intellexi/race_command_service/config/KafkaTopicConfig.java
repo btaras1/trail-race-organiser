@@ -1,8 +1,18 @@
 package com.intellexi.race_command_service.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class KafkaTopicConfig {
@@ -10,13 +20,40 @@ public class KafkaTopicConfig {
     public static final String RACE_TOPIC_NAME = "race-event";
     public static final String APPLICATION_TOPIC_NAME = "application-event";
 
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Bean
+    public Map<String, Object> producerConfig() {
+        HashMap<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+        return props;
+    }
+
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfig());
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+
     @Bean
     public NewTopic raceTopic() {
-        return new NewTopic(RACE_TOPIC_NAME, 3, (short) 1);
+        return TopicBuilder
+                .name("races")
+                .build();
     }
 
     @Bean
     public NewTopic applicationTopic() {
-        return new NewTopic(APPLICATION_TOPIC_NAME, 3, (short) 1);
+        return TopicBuilder
+                .name("applications")
+                .build();
     }
 }

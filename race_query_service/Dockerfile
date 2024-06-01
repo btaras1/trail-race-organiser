@@ -2,7 +2,7 @@ FROM eclipse-temurin:17.0.6_10-jre-jammy
 
 EXPOSE 8080
 RUN mkdir -p /app
-COPY ./build/libs/race_query_service*.jar /app/race_query_service.jar
+COPY ./target/race_query_service*.jar /app/race_query_service.jar
 RUN chown -R 1001 /app && chmod 777 /app
 
 USER 1001

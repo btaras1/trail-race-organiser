@@ -17,8 +17,9 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/races")
 @RequiredArgsConstructor
+@RequestMapping("api/v1/races")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class RaceController {
 
@@ -26,12 +27,14 @@ public class RaceController {
     RaceMapper mapper;
 
     @GetMapping(value = "{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<RaceResponseDto> getById(@PathVariable UUID id) {
         log.info("Received GET request for Race, id: {}", id);
         return ResponseEntity.ok(mapper.toResponse(service.getById(id)));
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<List<RaceResponseDto>> getAll() {
         log.info("Received GET request for all Races");
         return ResponseEntity.ok(mapper.toResponse(service.getAll()));

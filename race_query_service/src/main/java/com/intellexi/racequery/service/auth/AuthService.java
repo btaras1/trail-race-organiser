@@ -1,6 +1,7 @@
 package com.intellexi.racequery.service.auth;
 
 import com.intellexi.racequery.domain.User;
+import com.intellexi.racequery.domain.enums.UserRole;
 import com.intellexi.racequery.exception.UserNotFoundException;
 import com.intellexi.racequery.repository.UserRepository;
 import com.intellexi.racequery.rest.dto.request.AuthRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import static com.intellexi.racequery.domain.enums.UserRole.ADMINISTRATOR;
 import static lombok.AccessLevel.PRIVATE;
 
 @Service
@@ -40,6 +42,7 @@ public class AuthService {
         return AuthResponseDto.builder()
                 .token(jwtToken)
                 .expiresIn(jwtService.getExpirationTime())
+                .isAdmin(authenticatedUser.getRole().equals(ADMINISTRATOR))
                 .build();
     }
 }

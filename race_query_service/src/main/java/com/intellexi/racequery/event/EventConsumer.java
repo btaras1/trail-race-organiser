@@ -28,10 +28,7 @@ public class EventConsumer {
     List<EventStrategy> eventStrategies;
     ObjectMapper mapper;
 
-    @KafkaListener(topicPartitions = { @TopicPartition(
-            topic = RACE_TOPIC_NAME,
-            partitions = "0")
-    })
+    @KafkaListener(topics = "races", groupId = "message-group")
     public void consumeRaceEvents(String message) throws Exception {
         log.info("Received Race event -> {}", message);
         RaceEvent event = mapper.readValue(message, RaceEvent.class);
@@ -46,11 +43,7 @@ public class EventConsumer {
         log.info("Race event successfully processed -> entity-id: {}, type: {}", event.getRequest().getId(), event.getEventType());
     }
 
-    @KafkaListener(
-            topicPartitions = { @TopicPartition(
-                    topic = APPLICATION_TOPIC_NAME,
-                    partitions = "0")
-            })
+    @KafkaListener(topics = "applications", groupId = "message-group")
     public void consumeApplicationEvents(String message) throws Exception {
         log.info("Received Application event -> {}", message);
         ApplicationEvent event = mapper.readValue(message, ApplicationEvent.class);

@@ -7,21 +7,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import static lombok.AccessLevel.PRIVATE;
-import static org.springframework.kafka.support.KafkaHeaders.TOPIC;
 
 @Slf4j
 @Service
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class EventService {
-
-    public static final String RACE_TOPIC_NAME = "race-event";
-    public static final String APPLICATION_TOPIC_NAME = "application-event";
 
     KafkaTemplate<String, String> kafkaTemplate;
     ObjectMapper objectMapper;
@@ -30,21 +26,22 @@ public class EventService {
     public void sendRaceEvent(RaceEvent event) {
         var message = objectMapper.writeValueAsString(event);
 
+        ProducerRecord<String, String> record =
+                new ProducerRecord<>("races", null, message);
         log.info("Sending Race event -> {}", message);
 
-        kafkaTemplate.send(MessageBuilder.withPayload(message)
-                .setHeader(TOPIC, RACE_TOPIC_NAME)
-                .build());
+        kafkaTemplate.send(record);
     }
 
     @SneakyThrows
     public void sendApplicationEvent(ApplicationEvent event) {
         var message = objectMapper.writeValueAsString(event);
 
+        ProducerRecord<String, String> record =
+                new ProducerRecord<>("applications", null, message);
+
         log.info("Sending Application event -> {}", message);
 
-        kafkaTemplate.send(MessageBuilder.withPayload(message)
-                .setHeader(TOPIC, APPLICATION_TOPIC_NAME)
-                .build());
+        kafkaTemplate.send(record);
     }
 }

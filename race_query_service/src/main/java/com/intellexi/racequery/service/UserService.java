@@ -22,7 +22,7 @@ public class UserService {
 
     UserRepository repository;
 
-    public UserDetails findByEmail(String username) {
+    public User findByEmail(String username) {
         log.info("Getting User by email in the DB, email: {}", username);
         return repository.findByEmail(username)
                 .orElseThrow(() ->

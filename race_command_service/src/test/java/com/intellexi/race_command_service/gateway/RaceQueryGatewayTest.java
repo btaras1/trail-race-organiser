@@ -1,6 +1,6 @@
 package com.intellexi.race_command_service.gateway;
 
-import com.intellexi.race_command_service.rest.dto.response.UserDetailsResponse;
+import com.intellexi.race_command_service.rest.dto.response.UserDetailsResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,8 +25,10 @@ class RaceQueryGatewayTest {
     static final String ENDPOINT_URL = "https://endpoint.com";
     static final String USERNAME = "username";
     static final String AUTH_HEADER = "auth_header";
+    static final String ROLE = "ADMINISTRATOR";
+    static final String PASSWORD = "PASSWORD";
     @Mock
-    UserDetailsResponse user;
+    UserDetailsResponseDto user;
     @Mock
     RestTemplate restTemplate;
 
@@ -39,13 +41,17 @@ class RaceQueryGatewayTest {
 
     @Test
     void authUser() {
-        given(restTemplate.exchange(buildUri(), GET, buildEntity(), UserDetailsResponse.class))
+        given(restTemplate.exchange(buildUri(), GET, buildEntity(), UserDetailsResponseDto.class))
                 .willReturn(ResponseEntity.ok(user));
+
+        given(user.getEmail()).willReturn(USERNAME);
+        given(user.getPassword()).willReturn(PASSWORD);
+        given(user.getRole()).willReturn(ROLE);
 
         gateway.authUser(USERNAME, AUTH_HEADER);
 
         verify(restTemplate, times(1))
-                .exchange(buildUri(), GET, buildEntity(), UserDetailsResponse.class);
+                .exchange(buildUri(), GET, buildEntity(), UserDetailsResponseDto.class);
     }
 
     private URI buildUri() {

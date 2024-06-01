@@ -34,25 +34,47 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: "races:1:3,applications:1:3"
+      KAFKA_OFFSETS_RETENTION_MINUTES: 60
 
-  race-query-service:
+   race-query-service:
     build:
       context: ./race_query_service
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      KAFKA_BOOTSTRAP_SERVER: kafka:9092
+      POSTGRES_URL: postgres
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: race
     depends_on:
       - postgres
       - kafka
 
-  race-command-service:
+   race-command-service:
     build:
       context: ./race_command_service
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+    environment:
+      KAFKA_BOOTSTRAP_SERVER: kafka:9092
+      RACE_QUERY_GATEWAY: http://race-query-service:8080/api/v1/users/{username}
     depends_on:
       - kafka
+      - race-query-service
+    
+   race-app-client-app:
+    build:
+      context: ./race-application-client-application
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - race-query-service
+      - race-command-service
       
 volumes:
   postgres-data:
